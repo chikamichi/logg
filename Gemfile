@@ -12,4 +12,5 @@ group :test do
   gem 'autotest-notification',   '~>2.3'
   gem 'autotest-inotify',        '~>0.0'
   gem 'test-unit',               '~>2.1'
+  gem 'redgreen'
 end

@@ -62,7 +62,7 @@ GEM
       rcov (>= 0.8.3.3)
       reek (>= 1.2.6)
       roodi (>= 2.1.0)
-    rails_best_practices (0.6.1)
+    rails_best_practices (0.6.2)
       activesupport
       colored (~> 1.2)
       erubis (~> 2.6.6)
@@ -75,6 +75,7 @@ GEM
     rb-inotify (0.8.4)
       ffi (>= 0.5.0)
     rcov (0.9.9)
+    redgreen (1.2.2)
     reek (1.2.8)
       ruby2ruby (~> 1.2)
       ruby_parser (~> 2.0)
@@ -110,5 +111,6 @@ DEPENDENCIES
   metric_fu
   randexp (~> 0.1)
   rcov (~> 0.9)
+  redgreen
   rspec (~> 2.0)
   test-unit (~> 2.1)
