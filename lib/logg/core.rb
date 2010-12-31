@@ -28,6 +28,8 @@ module Logg
             ::Logg::Machine
           end
         end
+      else
+        raise RuntimeError, "Cannot mixin Logg::Er as #{base}#logger, already defined."
       end
     end
   end
