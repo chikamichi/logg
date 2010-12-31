@@ -1,20 +1,19 @@
 module Logg
   class Machine 
-    attr_accessor :message, :namespace
+    attr_reader :message, :namespace
 
-    def self.method_missing(meth, *args, &block)
-      @@loggy ||= ::Logg::Machine.new
-      @@loggy.namespace = meth.to_s
-      @@loggy.message   = (args.first.to_s == 'debug') ? nil : args.first.to_s
-      @@loggy.send :output!
+    def method_missing(meth, *args, &block)
+      @namespace = meth.to_s
+      @message   = (args.first.to_s == 'debug') ? nil : args.first.to_s
+      self.send :output!
     end
 
     private
 
     def output!
       debug  = "#{Time.now} | "
-      debug += "[#{self.namespace}] " unless self.namespace.nil?
-      debug += self.message
+      debug += "[#{@namespace}] " unless @namespace.nil?
+      debug += @message
       puts debug
       return debug
     end
@@ -25,7 +24,16 @@ module Logg
       if !base.respond_to?(:logger)
         base.instance_eval do
           def self.logger
-            ::Logg::Machine
+            @@_logg_er ||= ::Logg::Machine.new
+          end
+        end
+
+        def initialize
+          super
+          class << self
+            self
+          end.send(:define_method, :logger) do
+            @_logg_er ||= ::Logg::Machine.new
           end
         end
       else

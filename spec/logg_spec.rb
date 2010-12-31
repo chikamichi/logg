@@ -7,6 +7,14 @@ end
 class Bar < Foo
 end
 
+shared_examples_for "a Logg::Er user" do
+  describe "the class" do
+    it "should know about self#logger" do
+      u.should respond_to?(:logger)
+    end
+  end
+end
+
 describe Logg do
   context Logg do
     def subject; Logg; end
@@ -23,9 +31,14 @@ describe Logg do
     it { should be_a Module }
   end
 
-  context Foo do
+  context Foo, "instance" do
+    subject { Foo.new }
+    #it_should_behave_like "a Logg::Er user" do
+      #let(:u) { subject }
+    #end
     it "should output the logging message" do
-      Foo.logger.debug("test").should =~ /\[debug\] test/
+      subject.logger.debug("test").should =~ /\[debug\] test/
+      subject.class.logger.debug("test").should =~ /\[debug\] test/
     end
 
     it "should allow to define the message using a template" do
@@ -33,9 +46,11 @@ describe Logg do
     end
   end
 
-  context Bar do
+  context Bar, "instance" do
+    subject { Bar.new }
     it "should output the logging message" do
-      Bar.logger.debug("test").should =~ /\[debug\] test/
+      subject.logger.debug("test").should =~ /\[debug\] test/
+      subject.class.logger.debug("test").should =~ /\[debug\] test/
     end
   end
 end
