@@ -84,7 +84,7 @@ quietly do
       end
     end
 
-    context Bar do
+    context Bar, "subclass" do
       subject { Bar.new }
       it_should_behave_like "a Logg::Er user" do
         let(:u) { subject }

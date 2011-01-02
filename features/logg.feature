@@ -5,25 +5,28 @@ Feature: Basic Logg features
   Scenario: Use-case 
     Given a file named "use-case_logg.rb" with:
     """
+    require File.expand_path("../../lib/logg.rb",  __FILE__)
     class Foo
       include Logg::Er
 
-      attr_read :bar
+      attr_reader :baz
 
       def initialize
-        logger.debug "initializing"
-        @bar = 'bar'
+        @baz = 'baz'
+        self.class.logger.debug "initializing"
       end
 
-      def baz
-        logger.foo "in #baz"
-        puts bar
+      def bar
+        logger.foo "in #bar"
+        puts self.baz
       end
     end
 
-    f = Foo.new
-    f.baz
+    foo = Foo.new
+    foo.bar
+    Foo.logger.at_class_level "also"
     """
     When I run "ruby use-case_logg.rb"
     Then the output should contain "initializing"
-    And  the output should contain "[foo] in #baz"
+    And  the output should contain "[foo] in #bar"
+    And  the output should contain "[at_class_level] also"
