@@ -7,6 +7,6 @@ Gem::Specification.new do |s|
   s.homepage = "http://www.github.com/af83/logg"
   s.summary = "A simple logger."
   s.description = "A simple logger for your ruby applications."
-  s.files = Dir["lib/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["lib/**/*"] + ["MIT-LICENSE", "Rakefile", "Guardfile", "README.md"]
   s.version = "0.0.1"
 end

@@ -2,5 +2,5 @@
 require 'aruba/cucumber'
 
 Before do
-  @dirs = ["aruba"]
+  @dirs = ["examples"]
 end
