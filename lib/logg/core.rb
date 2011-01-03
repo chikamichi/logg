@@ -1,21 +1,6 @@
-# Logg provides a module, Er, which a class can include (mixin) to gain
-# logging helpers:
-#
-#   class Foo
-#     include Logg::Er
-#   end
-#
-#   Foo.logger.debug "message"
-#   Foo.new.logger.debug "message"
-#   Foo.new.logger.my_namespace "message"
-#
-# Both the class and class instances can access their logging machine
-# through the +#logger+ (instance/class) method. Note each instances
-# has its own machine, and the class' machine is also a different one.
-#
 module Logg
   class Machine 
-    attr_reader :message, :namespace, :customs
+    attr_reader :message, :namespace
 
     # The Machine is based on #method_missing. It auto-sets both the message
     # and the namespace internally, then auto-sends the order +:output!+.
