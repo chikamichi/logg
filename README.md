@@ -42,11 +42,12 @@ If you would like to define a custom logger `as`, this method is also available 
 
 As logging is all about building meaningful messages, one should be provided with efficient tools to define how a message is rendered, once the data are available. Logg uses Tilt to help you define how a message looks like and what does it contain. Tilt is a wrapper around several template engines (you may know about ERB, haml, or the raw `String`, but there are many others). Just tell Logg which format you want to use and go ahead.
 
+All supported template formats and rendering options are documented under `examples/` and by the Cucumber features.
+
     class Foo
       include Logg::Er
 
-      # let's use vanilla ruby code for the first example,
-      # assuming we are handling HTTP requests
+      # let's use vanilla ruby code for the first example
       logger.as(:foo) do
         puts "…"
       end
@@ -57,19 +58,27 @@ As logging is all about building meaningful messages, one should be provided wit
       end
 
       # now we want to render an external HAML template
-      logger.as(:foo, :render => :haml) do
+      # any data is passed to the template under the same name
+      logger.as(:foo, :render => :haml) do |data|
         render('tpl/foo')
       end
 
       # or even simpler, with an explicit extension
-      logger.as(:foo) do
+      logger.as(:foo) do |bar, baz|
         render('tpl/foo.haml')
       end
     end
 
 Note that the blocks are executed in the context of the logger, which means `render` is actually `Logg::Machine#render` and will not conflict with any other method. If you would like to define a `logger.render` custom logger, the `render` method is also available as `_render`.
 
-All supported template formats and rendering options are documented under `examples/` and by the Cucumber features.
+If you want to render to several endpoints, for instance both to `$stderr` and a file, just do it:
+
+    logger.as(:foo) do |data|
+      render('tpl/foo', :as => :haml, :to => :stderr)
+      render('tpl/foo', :as => :haml, :to => a_file)
+    end
+
+The template is memoized so rendering actually takes place only once.
 
 ## About the logger backend
 
