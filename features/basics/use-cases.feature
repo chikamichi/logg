@@ -3,9 +3,9 @@ Feature: Basic Logg features
   Logg provides you with simple logging facilities.
 
   Scenario: Use-case 
-    Given a file named "use-case_logg.rb" with:
+    Given a file named "01-basic_usage/use_case.rb" with:
     """
-    require File.expand_path("../../lib/logg.rb",  __FILE__)
+    require File.expand_path("../../../lib/logg.rb",  __FILE__)
 
     class Foo
       include Logg::Er
@@ -27,15 +27,15 @@ Feature: Basic Logg features
     foo.bar
     Foo.logger.at_class_level "also"
     """
-    When I run "ruby use-case_logg.rb"
+    When I run "ruby 01-basic_usage/use_case.rb"
     Then the output should contain "initializing"
     And  the output should contain "[foo] in #bar"
     And  the output should contain "[at_class_level] also"
 
-  Scenario: With custom guards
-    Given a file named "custom_guard.rb" with:
+  Scenario: With a custom logger
+    Given a file named "01-basic_usage/custom_logger.rb" with:
     """
-    require File.expand_path("../../lib/logg.rb",  __FILE__)
+    require File.expand_path("../../../lib/logg.rb",  __FILE__)
     require 'ostruct'
 
     class Foo
@@ -60,6 +60,6 @@ Feature: Basic Logg features
     foo.logger.http_failure response_KO, data
     foo.logger.http_success response_OK
     """
-    When I run "ruby custom_guard.rb"
+    When I run "ruby 01-basic_usage/custom_logger.rb"
     And  the output should contain "Net::HTTP failed with 404\n- response: KO\n- data: fake_data"
     And  the output should contain "Net::HTTP 200"

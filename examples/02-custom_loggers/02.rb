@@ -1,4 +1,4 @@
-require File.expand_path("../../lib/logg.rb",  __FILE__)
+require File.expand_path("../../../lib/logg.rb",  __FILE__)
 
 class Foo
   include Logg::Er
