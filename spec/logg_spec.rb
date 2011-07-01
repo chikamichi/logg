@@ -2,7 +2,7 @@ require 'spec_helper'
 
 class Foo
   include Logg::Er
-  
+
   attr_reader :test
 
   def initialize

@@ -1,5 +1,6 @@
 require File.expand_path("../../lib/logg.rb",  __FILE__)
 require 'tempfile'
+require 'stringio'
 
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
