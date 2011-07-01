@@ -50,7 +50,7 @@ module Logg
       output  = "#{Time.now} | "
       output += "[#{@namespace}] " unless @namespace.nil?
       output += @message
-      puts output
+      puts output unless defined?(Logg::NO_STDOUT) && Logg::NO_STDOUT
       return output
     end
   end

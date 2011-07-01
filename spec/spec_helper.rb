@@ -16,12 +16,11 @@ RSpec.configure do |config|
 end
 
 def quietly
-  original_stdout = $stdout
-  $stdout = fake = StringIO.new
-  begin
-    yield
-  ensure
-    $stdout = original_stdout
-  end
-  fake.string
+  orig_stdout = $stdout.clone
+  orig_stderr = $stdout.clone
+  $stdout.reopen(File.new('spec_stdout', 'w'))
+  $stderr.reopen(File.new('spec_stderr', 'w'))
+  yield
+  $stdout = orig_stdout
+  $stderr = orig_stderr
 end
