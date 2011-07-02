@@ -73,9 +73,17 @@ describe Logg do
     it { should be_a Module }
   end
 
-  context Logg::Machine do
-    def subject; Logg::Machine; end
-    it { should be_a Module }
+  context Logg::Dispatcher do
+    def subject; Logg::Dispatcher; end
+    it { should be_a Class }
+    describe '#as' do
+      it "should be provided the logger's name" do
+        lambda { subject.new.as }.should raise_error ArgumentError
+      end
+      it "should be provided a block defining the logger" do
+        lambda { subject.new.as(:toto) }.should raise_error ArgumentError, /missing/i
+      end
+    end
   end
 
   context Logg::Machine do

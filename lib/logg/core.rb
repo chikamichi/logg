@@ -84,8 +84,8 @@ module Logg
 
     attr_reader :message, :namespace
 
-    # The Dispatcher is based on #method_missing. It auto-sets both the message
-    # and the namespace internally, then auto-sends the order +:output!+.
+    # The Dispatcher default behavior relies on #method_missing. It sets both the
+    # message and a namespace, then auto-sends the order to output.
     #
     def method_missing(meth, *args, &block)
       @namespace = meth.to_s
@@ -94,9 +94,7 @@ module Logg
     end
 
     def eigenclass
-      class << self
-        self
-      end
+      class << self; self; end
     end
 
     # Define a custom logger, using a template. The template may be defined
@@ -142,10 +140,10 @@ module Logg
     # TODO: memoize the Render instance somehow? Or find another trick to
     # execute the block.
     #
-    def as(method, *options, &block)
-      # TODO: respond_to? if/else
+    def as(method, &block)
+      raise ArgumentError, 'Missing mandatory block' unless block_given?
+
       method  = method.to_sym
-      options = options.first
 
       # Define the guard at class-level, if not already defined.
       if !eigenclass.respond_to?(method)
@@ -169,7 +167,9 @@ module Logg
 
     private
 
-    # TODO: handle the output with a templating system
+    # Default logging behavior. Outputs to $stdout using #puts and return
+    # the message.
+    #
     def output!
       output  = "#{Time.now} | "
       output += "[#{@namespace}] " unless @namespace.nil?
@@ -183,16 +183,18 @@ module Logg
   # simple meta-programming on this receiver to add support for the logger. It thus
   # enable the receiver to use the logger's default implementation and/or define
   # custom loggers.
+  #
   module Machine
     LOGGER = Logg::Dispatcher.new
-    NAME = (defined?(::Logg::LOG_METHOD) && ::Logg::LOG_METHOD) || :log
+    #NAME = (defined?(::Logg::LOG_METHOD) && ::Logg::LOG_METHOD) || :log
+    NAME = :log
 
     def self.included(base)
       if !base.respond_to?(NAME)
         base.instance_eval do
           # Memoized logger for the receiver's class.
           #
-          # TODO: add support for defining the logger under a different name than #logger
+          # TODO: add support for defining the logger under a different name than #log,
           # this means either defining a constant before mixin, or delaying the metaprog.
           class << self; self; end.instance_eval do
             define_method(NAME) do
