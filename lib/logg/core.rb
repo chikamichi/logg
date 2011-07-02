@@ -45,8 +45,8 @@ module Logg
           path.path
         elsif path.respond_to?(:realpath)
           path.to_s
-        elsif path.is_a?(String)
-          path
+        elsif path.respond_to?(:to_s)
+          path.to_s
         else
           raise ArgumentError, 'Missing file or a filepath.'
         end
