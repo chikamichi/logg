@@ -33,7 +33,7 @@ report.failure 'danger' # => "2011-07-02 20:27:01 +0200 | [failure] danger"
 
 ``` ruby
 class Foo
-  attr_accessor :report
+  attr_reader :report
 
   def initialize
     @report = Logg::Dispatcher.new
@@ -49,10 +49,7 @@ Foo.new.bar # => "2011-07-02 20:27:01 +0200 | [something] important"
 This illustrates the basic use cases. The default logging format is a string
 sent to `$stdout`, formatted as `time | [namespace] message` where "namespace" is the method called on the logger.
 
-But this is only the default implementation of the message dispatcher. Many
-other examples are available under the `examples/` directory, (based on the
-Cucumber `features/`). The next part of this README explains some of those
-use-cases.
+But this is only the default implementation of the message dispatcher. Many other examples are available under the `examples/` directory (based on the Cucumber `features/`). The next part of this README explains some of those use-cases.
 
 ## Custom loggers
 
@@ -123,4 +120,15 @@ TODO: provide helpers for message dispatching/logging, levels managment and the 
 
 ## About the logger implementation
 
-When a class mixins the `Logg::Machine` module, a `Logg::Dispatcher` instance is created and associated (if possible, see below) to the receiving class, through method injection. The custom loggers blocks are runned in the context of a `Logg::Dispatcher::Render` class, so be aware you must inject in the closure any data you would require. This is by design so as to keep the logger's logic separated from the application burden, enforcing explicit control over the data payloads. If this is just too much a burden for you, you may avoid mixin `Logg::Machine` and just make use of the `Render` core implementation.
+  * When a class mixins the `Logg::Machine` module, a `Logg::Dispatcher` instance
+is created and associated (if possible, see below) to the receiving class,
+through method injection.
+  * The custom loggers blocks are runned in the context
+of a `Logg::Dispatcher::Render` class, so be aware you must inject in the
+closure any data you would require. This is by design so as to keep the
+logger's logic separated from the application burden, enforcing explicit
+control over the data payloads.
+  * If this is just too much a burden for you, you
+may avoid mixin `Logg::Machine` and just make use of the `Render` core
+implementation, by instantiating a new `Logg::Dispatcher` as illustrated in
+the Synopsis section above.
