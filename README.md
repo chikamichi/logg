@@ -2,6 +2,10 @@
 
 A simple message dispatcher (aka. logger) for your Ruby applications.
 
+## Install
+
+    gem install logg
+
 ## Synopsis
 
 Logg is a library providing generic logging features. At the core of Logg is a module, `Logg::Machine`, which you may include (mixin) in a class, or extend within another module. This will inject the Logg helpers, so one can write something like this:
@@ -77,8 +81,8 @@ If you want to render to several logging endpoints, and send a mail on top of th
 
 ## Dispatching helpers
 
-TODO: provide helpers for message dispatching/logging.
+TODO: provide helpers for message dispatching/logging, levels managment and the like.
 
-## About the logger backend
+## About the logger implementation
 
-When a class mixins the `Logg::Machine` module, a `Logg::Dispatcher` instance is created and associated (if possible, see below) to the base class, to its subclasses and to any instance of those classes. The machine is shared among those objects, which means custom loggers, formats… defined in any of them is available to all the others at runtime.
+When a class mixins the `Logg::Machine` module, a `Logg::Dispatcher` instance is created and associated (if possible, see below) to the receiving class, through method injection. The custom loggers blocks are runned in the context of a `Logg::Dispatcher::Render` class, so be aware you must inject in the closure any data you would require. This is by design so as to keep the logger's logic separated from the application burden, enforcing explicit control over the data payloads. If this is just too much a burden for you, you may avoid mixin `Logg::Machine` and just make use of the `Render` core implementation.
