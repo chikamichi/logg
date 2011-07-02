@@ -14,9 +14,9 @@ Logg is a library providing generic logging features. At the core of Logg is a m
     Foo.new.log.debug "test…"  # => Fri Dec 31 16:00:09 +0100 2010 | [debug] test…
     Foo.new.log.error "failed" # => Fri Dec 31 16:00:09 +0100 2010 | [error] failed
 
-This illustrates the basic use case, with the default message format being: "time | [namespace] message" where namespace is the method called on the logger.
+This illustrates the basic use case, with the default message format being: `time | [namespace] message` where namespace is the method called on the logger.
 
-Many other use cases are available under the `examples/` directory, based on the Cucumber features. This README explains some of them.
+Many other use cases are available under the `examples/` directory, based on the Cucumber `features/`. This README explains some of them.
 
 ## Custom loggers
 
@@ -37,15 +37,15 @@ Usually, logging engines provide you with a bunch of "log levels", such as FATAL
 
 `as` expects a mandatory block, which may take any number of arguments, of any kind. Within the block, it is expected you will "log" somehow, but actually you are free to perform anything. You may output a simple string on $stdout, call an external API through HTTP, send an email, or even render a template (see below): that's just legacy ruby code in here! All in all, Logg is just a mega-method-definition-machine, aimed at logging—but feel free to use it the way you like (dispatching events, for instance).
 
-Soon to come: the possibility to change `log` for any other valid method name.
+Soon to come: the possibility to change `#log` for any other valid method name.
 
-Note: if you would like to define a custom logger under the name `as`, the helper method is also available under the `_as` alias.
+Note: if you would like to define a custom logger under the name `#as`, the helper method is also available under the `#_as` alias.
 
 ## Message formatting, templates
 
 Logging is all about building meaningful messages. You may also want to log to the tty, a file and send an email on top of that, and each one of those output channels would benefit from using a different data representation. One should thus be provided with efficient tools to define how a message is rendered in particular context. Logg makes use of Tilt to help you format your data. Tilt is a wrapper around several template engines (you may know about ERB or haml, but there are many others). Just tell Logg which format you want to use and go ahead! The dispatching logic is of your responsability.
 
-For more details, see `examples/` and read/run the Cucumber `features/` (with `cucumber features`).
+For more details, see `examples/` and read/run the Cucumber `features/` (command: `cucumber features`).
 
     class Foo
       include Logg::Machine
@@ -74,6 +74,10 @@ For more details, see `examples/` and read/run the Cucumber `features/` (with `c
     end
 
 If you want to render to several logging endpoints, and send a mail on top of that, just do it within the block!
+
+## Dispatching helpers
+
+TODO: provide helpers for message dispatching/logging.
 
 ## About the logger backend
 
