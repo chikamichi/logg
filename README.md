@@ -147,7 +147,7 @@ When using MRI 1.9.2 or equivalent implementations, you can now define closure w
 
 ``` ruby
 log.as(:report) do |name = 'toto', *args|
-  puts a
+  puts name
   puts args
 end
 
