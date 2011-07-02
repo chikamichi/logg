@@ -12,13 +12,15 @@ $ gem install logg
 
 Logg is a library providing generic logging features. At the core of Logg is a module, `Logg::Machine`, which you may include (mixin) in a class, or extend within another module. This will inject the Logg helpers, so one can write something like this:
 
-    class Foo
-      include Logg::Machine
-    end
+``` ruby
+class Foo
+  include Logg::Machine
+end
 
-    Foo.log.debug "test!"      # => Fri Dec 31 16:00:09 +0100 2010 | [debug] test!
-    Foo.new.log.debug "test…"  # => Fri Dec 31 16:00:09 +0100 2010 | [debug] test…
-    Foo.new.log.error "failed" # => Fri Dec 31 16:00:09 +0100 2010 | [error] failed
+Foo.log.debug "test!"      # => Fri Dec 31 16:00:09 +0100 2010 | [debug] test!
+Foo.new.log.debug "test…"  # => Fri Dec 31 16:00:09 +0100 2010 | [debug] test…
+Foo.new.log.error "failed" # => Fri Dec 31 16:00:09 +0100 2010 | [error] failed
+```
 
 This illustrates the basic use case, with the default message format being: `time | [namespace] message` where namespace is the method called on the logger.
 
@@ -28,18 +30,20 @@ Many other use cases are available under the `examples/` directory, based on the
 
 Usually, logging engines provide you with a bunch of "log levels", such as FATAL, ERROR, WARNING, NOTICE. Logg does not enforce such a convention and rather let you define your own, if required, but does not enforce you to do so. More generally, one may create custom loggers using `Logg::Dispatcher#as`:
 
-    class Foo
-      include Logg::Machine
+``` ruby
+class Foo
+  include Logg::Machine
 
-      # let's define a custom logger
-      log.as(:failure) do |data|
-        # play with data and render/do something, somewhere: output a String,
-        # send an email, anything you want.
-      end
+  # let's define a custom logger
+  log.as(:failure) do |data|
+    # play with data and render/do something, somewhere: output a String,
+    # send an email, anything you want.
+  end
 
-      # then use it!
-      log.failure my_data
-    end
+  # then use it!
+  log.failure my_data
+end
+```
 
 `as` expects a mandatory block, which may take any number of arguments, of any kind. Within the block, it is expected you will "log" somehow, but actually you are free to perform anything. You may output a simple string on $stdout, call an external API through HTTP, send an email, or even render a template (see below): that's just legacy ruby code in here! All in all, Logg is just a mega-method-definition-machine, aimed at logging—but feel free to use it the way you like (dispatching events, for instance).
 
@@ -53,31 +57,33 @@ Logging is all about building meaningful messages. You may also want to log to t
 
 For more details, see `examples/` and read/run the Cucumber `features/` (command: `cucumber features`).
 
-    class Foo
-      include Logg::Machine
+``` ruby
+class Foo
+  include Logg::Machine
 
-      # let's use vanilla ruby code for the first example: output the
-      # message to $stdout using #puts
-      log.as(:foo) do
-        puts "something really important happened"
-      end
+  # let's use vanilla ruby code for the first example: output the
+  # message to $stdout using #puts
+  log.as(:foo) do
+    puts "something really important happened"
+  end
 
-      # you may also define a template within the block, render it and
-      # use the result.
-      # (Keep in mind that this kind of template with heavy code is considered bad practice ;))
-      log.as(:foo) do |data|
-        tpl = "Data: <%= self.map { |k,v| puts k.to_s + v.to_s } %>"
-        puts render_inline(tpl, :as => :erb, :data => data)
-      end
-      log.foo({:foo => :bar}) # => "Data: foobar"
+  # you may also define a template within the block, render it and
+  # use the result.
+  # (Keep in mind that this kind of template with heavy code is considered bad practice ;))
+  log.as(:foo) do |data|
+    tpl = "Data: <%= self.map { |k,v| puts k.to_s + v.to_s } %>"
+    puts render_inline(tpl, :as => :erb, :data => data)
+  end
+  log.foo({:foo => :bar}) # => "Data: foobar"
 
-      # now we want to render an external HAML template, providing its path with
-      # or withouth the .haml extension (if not provided, the :as option is mandatory)
-      log.as(:http_response) do |resp|
-        output = render('tpl/foo', :as => :haml, :data => resp)
-        # do something with output
-      end
-    end
+  # now we want to render an external HAML template, providing its path with
+  # or withouth the .haml extension (if not provided, the :as option is mandatory)
+  log.as(:http_response) do |resp|
+    output = render('tpl/foo', :as => :haml, :data => resp)
+    # do something with output
+  end
+end
+```
 
 If you want to render to several logging endpoints, and send a mail on top of that, just do it within the block!
 

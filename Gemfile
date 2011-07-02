@@ -3,7 +3,7 @@ source "http://rubygems.org"
 gem 'tilt'
 gem 'better'
 
-group :test do
+group :development, :test do
   gem 'test-unit'
   gem 'rspec'
   gem 'cucumber'
