@@ -78,7 +78,12 @@ Note: if you would like to define a custom logger under the name `#as`, the help
 
 ## Message formatting, templates
 
-Logging is all about building meaningful messages. You may also want to log to the tty, a file and send an email on top of that, and each one of those output channels would benefit from using a different data representation. One should thus be provided with efficient tools to define how a message is rendered in particular context. Logg makes use of Tilt to help you format your data. Tilt is a wrapper around several template engines (you may know about ERB or haml, but there are many others). Just tell Logg which format you want to use and go ahead! The dispatching logic is of your responsability.
+Logging is all about building meaningful messages. You may also want to log to
+the tty, a file and send an email on top of that, and each one of those output
+channels would benefit from using a different data representation. One should
+thus be provided with efficient tools to define how a message is rendered in
+particular context. Logg makes use of [Tilt](https://github.com/rtomayko/tilt)
+to help you format your data. [Tilt](https://github.com/rtomayko/tilt) is a wrapper around several template engines (you may know about ERB or haml, but there are many others). Just tell Logg which format you want to use and go ahead! The dispatching logic is of your responsability.
 
 For more details, see `examples/` and read/run the Cucumber `features/` (command: `cucumber features`).
 
@@ -115,7 +120,7 @@ end
 
 If you want to render to several logging endpoints, and send a mail on top of that, just do it within the block!
 
-Both `#render_inline` and `#render` follow Tilt's implementation. The `:data`
+Both `#render_inline` and `#render` follow [Tilt](https://github.com/rtomayko/tilt)'s implementation. The `:data`
 object is any Ruby object which be promoted as `self` when rendering the
 template. In the last example, if `foo.haml` where to contain calls to
 methods such as `status` or `body`, this would mean running `response.status`
@@ -129,7 +134,7 @@ insight).
 
 TODO: provide helpers for message dispatching/logging, levels managment and the like.
 
-## About the logger implementation
+## About the implementation
 
   * When a class mixins the `Logg::Machine` module, a `Logg::Dispatcher` instance is created and associated (if possible, see below) to the receiving class,
 through method injection.
@@ -145,12 +150,13 @@ log.as(:report) do |name = 'toto', *args|
   puts a
   puts args
 end
+
 log.report # => toto
-                []
+           #    []
 log.report('joe') # => joe
-                       []
+                  #    []
 log.report('joe', {:foo => :bar}, 1) # => joe
-                                          [{:foo => :bar}, 1]
+                                     #    [{:foo => :bar}, 1]
 ```
 
 It also support blocks as closure parameters ([more details](http://www.igvita.com/2011/02/03/new-ruby-19-features-tips-tricks/)). All of this allows for building super-dynamic custom loggers.
