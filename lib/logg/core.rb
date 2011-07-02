@@ -59,7 +59,7 @@ module Logg
             test_path = Pathname.new(path)
             raise ArgumentError, "Invalid filepath #{path}" unless test_path.file?
           rescue
-            test_path = Pathname.new(path + ".#{args[:as].downcase}")
+            test_path = Pathname.new(path + ".#{args[:as].to_s.downcase}")
             raise ArgumentError, "Invalid filepath #{path}" unless test_path.file?
             path = test_path.to_s
           end
