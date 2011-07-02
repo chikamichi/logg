@@ -48,7 +48,7 @@ Feature: Logg features
 
     Foo.logger.warning
     """
-    When I run "ruby 02_simple_custom_logger.rb"
+    When I run `ruby 02_simple_custom_logger.rb`
     Then the output should contain "[Warning] something weird happened at"
 
   Scenario: Advanced custom loggers
