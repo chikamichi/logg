@@ -1,0 +1,8 @@
+%h2 Query log report
+%span.status
+  Status:
+  = self.status
+%span.body
+  Response:
+  = self.body
+%br/

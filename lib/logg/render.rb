@@ -1,0 +1,2 @@
+module Logg
+end
