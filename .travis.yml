@@ -4,7 +4,7 @@ rvm:
   - rbx
   - ree
   - jruby
-script: "bundle exec rspec spec && cucumber features/"
+script: "bundle exec rspec spec" # do not run cucumber features on Travis
 branches:
   only:
     - master
