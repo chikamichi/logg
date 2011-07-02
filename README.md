@@ -66,6 +66,7 @@ class Foo
   log.as(:foo) do
     puts "something really important happened"
   end
+  log.foo # => "something really important happened" on $stdout
 
   # you may also define a template within the block, render it and
   # use the result.
@@ -78,10 +79,11 @@ class Foo
 
   # now we want to render an external HAML template, providing its path with
   # or withouth the .haml extension (if not provided, the :as option is mandatory)
-  log.as(:http_response) do |resp|
-    output = render('tpl/foo.haml', :data => resp)
-    # do something with output
+  log.as(:http_response) do |response|
+    output = render('tpl/foo.haml', :data => response)
+    # do something with output, for instance, send a mail notification when not a 200
   end
+  log.http_response(resp) # performs the block, really
 end
 ```
 
