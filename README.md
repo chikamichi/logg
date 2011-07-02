@@ -4,7 +4,9 @@ A simple message dispatcher (aka. logger) for your Ruby applications.
 
 ## Install
 
-    gem install logg
+``` bash
+$ gem install logg
+```
 
 ## Synopsis
 
