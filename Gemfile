@@ -1,5 +1,8 @@
 source "http://rubygems.org"
 
+gem 'tilt'
+gem 'better'
+
 group :test do
   gem 'test-unit'
   gem 'rspec'
