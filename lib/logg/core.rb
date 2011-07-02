@@ -1,6 +1,6 @@
 module Logg
   # Set to true to puts output when using logger#debug default's method.
-  ALWAYS_PUTS = false
+  ALWAYS_PUTS = true
 
   # A Dispatcher is a logger core implementation, providing logger's definition
   # and output methods. It's not intented to be used directly but through the

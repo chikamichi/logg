@@ -1,5 +1,6 @@
 class Foo
   include Logg::Machine
+  Logg::ALWAYS_PUTS = false
 
   attr_reader :test
 
