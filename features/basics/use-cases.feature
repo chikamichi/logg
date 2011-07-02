@@ -36,17 +36,17 @@ Feature: Logg features
   Scenario: The simplest custom logger
     Given a file named "02_simple_custom_logger.rb" with:
     """
-    require File.expand_path("../../../lib/logg.rb",  __FILE__)
+    require 'logg'
 
-    class Foo
-      include Logg::Er
+    class Foo2
+      include Logg::Machine
 
-      logger.as(:warning) do
+      log.as(:warning) do
         puts "[Warning] something weird happened at #{Time.now}…"
       end
     end
 
-    Foo.logger.warning
+    Foo2.log.warning
     """
     When I run `ruby 02_simple_custom_logger.rb`
     Then the output should contain "[Warning] something weird happened at"

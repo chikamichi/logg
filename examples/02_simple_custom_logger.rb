@@ -1,11 +1,11 @@
-require File.expand_path("../../../lib/logg.rb",  __FILE__)
+require 'logg'
 
-class Foo
-  include Logg::Er
+class Foo2
+  include Logg::MachineE
 
-  logger.as(:warning) do
+  log.as(:warning) do
     puts "[Warning] something weird happened at #{Time.now}…"
   end
 end
 
-Foo.logger.warning
+Foo2.log.warning
