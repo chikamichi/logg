@@ -34,6 +34,7 @@ report.failure 'danger' # => "2011-07-02 20:27:01 +0200 | [failure] danger"
 ``` ruby
 class Foo
   attr_accessor :report
+
   def initialize
     @report = Logg::Dispatcher.new
   end
@@ -45,9 +46,13 @@ end
 Foo.new.bar # => "2011-07-02 20:27:01 +0200 | [something] important"
 ```
 
-This illustrates the basic use case, with the default message format being: `time | [namespace] message` where namespace is the method called on the logger.
+This illustrates the basic use cases. The default logging format is a string
+sent to `$stdout`, formatted as `time | [namespace] message` where "namespace" is the method called on the logger.
 
-Many other use cases are available under the `examples/` directory, based on the Cucumber `features/`. This README explains some of them.
+But this is only the default implementation of the message dispatcher. Many
+other examples are available under the `examples/` directory, (based on the
+Cucumber `features/`). The next part of this README explains some of those
+use-cases.
 
 ## Custom loggers
 
