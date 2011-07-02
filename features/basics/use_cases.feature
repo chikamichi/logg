@@ -1,11 +1,11 @@
-Feature: Logg features
+Feature: Basic Logg features
 
-  Logg provides simple logging/dispatching facilities.
+  Logg provides you with simple logging/dispatching facilities.
 
-  Scenario: Basic use-case
-    Given a file named "01_basic_logger.rb" with:
+  Scenario: Use-case
+    Given a file named "01-basic_usage/use_cases.rb" with:
     """
-    require 'logg'
+    require File.expand_path("../../../lib/logg.rb",  __FILE__)
 
     class Foo
       include Logg::Machine
@@ -27,34 +27,16 @@ Feature: Logg features
     foo.bar
     Foo.log.at_class_level "also"
     """
-    When I run `ruby 01_basic_logger.rb`
+    When I run "ruby 01-basic_usage/use_cases.rb"
     Then the output should contain "initializing"
     And  the output should contain "[foo] in #bar"
     And  the output should contain "baz"
     And  the output should contain "[at_class_level] also"
 
-  Scenario: The simplest custom logger
-    Given a file named "02_simple_custom_logger.rb" with:
+  Scenario: With a custom logger
+    Given a file named "01-basic_usage/custom_loggers.rb" with:
     """
     require File.expand_path("../../../lib/logg.rb",  __FILE__)
-
-    class Foo
-      include Logg::Er
-
-      logger.as(:warning) do
-        puts "[Warning] something weird happened at #{Time.now}…"
-      end
-    end
-
-    Foo.logger.warning
-    """
-    When I run "ruby 02_simple_custom_logger.rb"
-    Then the output should contain "[Warning] something weird happened at"
-
-  Scenario: Advanced custom loggers
-    Given a file named "03_advanced_custom_loggers.rb" with:
-    """
-    require 'logg'
     require 'ostruct'
 
     class Foo
@@ -79,6 +61,6 @@ Feature: Logg features
     foo.log.http_failure response_KO, data
     foo.log.http_success response_OK
     """
-    When I run `ruby 03_advanced_custom_loggers.rb`
-    Then the output should contain "Net::HTTP failed with 404\n- response: KO\n- Error: fake_data"
+    When I run "ruby 01-basic_usage/custom_loggers.rb"
+    And  the output should contain "Net::HTTP failed with 404\n- response: KO\n- Error: fake_data"
     And  the output should contain "Net::HTTP 200"
