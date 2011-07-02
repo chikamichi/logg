@@ -20,7 +20,7 @@ Many other use cases are available under the `examples/` directory, based on the
 
 ## Custom loggers
 
-Usually, logging engines provide you with a bunch of "log levels", such as FATAL, ERROR, WARNING, NOTICE. Logg does not enforce such a convention and rather let you define your own, if required, but does not enforce you to do so. More generally, one may create custom loggers using `Logg::Core#as`:
+Usually, logging engines provide you with a bunch of "log levels", such as FATAL, ERROR, WARNING, NOTICE. Logg does not enforce such a convention and rather let you define your own, if required, but does not enforce you to do so. More generally, one may create custom loggers using `Logg::Dispatcher#as`:
 
     class Foo
       include Logg::Machine
@@ -77,4 +77,4 @@ If you want to render to several logging endpoints, and send a mail on top of th
 
 ## About the logger backend
 
-When a class mixins the `Logg::Machine` module, a `Logg::Core` instance is created and associated (if possible, see below) to the base class, to its subclasses and to any instance of those classes. The machine is shared among those objects, which means custom loggers, formats… defined in any of them is available to all the others at runtime.
+When a class mixins the `Logg::Machine` module, a `Logg::Dispatcher` instance is created and associated (if possible, see below) to the base class, to its subclasses and to any instance of those classes. The machine is shared among those objects, which means custom loggers, formats… defined in any of them is available to all the others at runtime.
