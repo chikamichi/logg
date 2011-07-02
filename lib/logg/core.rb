@@ -63,7 +63,7 @@ module Logg
             raise ArgumentError, "Invalid filepath #{path}" unless test_path.file?
             path = test_path.to_s
           end
-          Tilt.const_get("#{args[:as].downcase.capitalize}Template").new(path)
+          Tilt.const_get("#{args[:as].to_s.downcase.capitalize}Template").new(path)
         else
           Tilt.new(path)
         end
