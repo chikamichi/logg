@@ -22,6 +22,29 @@ Foo.new.log.debug "testâ€¦"  # => Fri Dec 31 16:00:09 +0100 2010 | [debug] testâ
 Foo.new.log.error "failed" # => Fri Dec 31 16:00:09 +0100 2010 | [error] failed
 ```
 
+You may also just instantiate a Logg dispatcher. This is less intrusive, no
+mixin involved, allow for changing the dispatcher's name and have several
+loggers lurking around:
+
+``` ruby
+report = Logg::Dispatcher.new
+report.failure 'danger' # => "2011-07-02 20:27:01 +0200 | [failure] danger"
+```
+
+``` ruby
+class Foo
+  attr_accessor :report
+  def initialize
+    @report = Logg::Dispatcher.new
+  end
+
+  def bar
+    report.something 'important'
+  end
+end
+Foo.new.bar # => "2011-07-02 20:27:01 +0200 | [something] important"
+```
+
 This illustrates the basic use case, with the default message format being: `time | [namespace] message` where namespace is the method called on the logger.
 
 Many other use cases are available under the `examples/` directory, based on the Cucumber `features/`. This README explains some of them.
