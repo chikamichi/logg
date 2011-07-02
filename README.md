@@ -104,11 +104,12 @@ class Foo
 
   # now we want to render an external HAML template, providing its path with
   # or withouth the .haml extension (if not provided, the :as option is mandatory)
-  log.as(:http_response) do |response|
+  # note we expect two parameters for this logger
+  log.as(:http_response) do |response, context|
     output = render('tpl/foo.haml', :data => response)
     # do something with output, for instance, send a mail notification when not a 200
   end
-  log.http_response(resp) # performs the block, really
+  log.http_response(resp, request.params) # performs the block, really
 end
 ```
 
@@ -120,15 +121,26 @@ TODO: provide helpers for message dispatching/logging, levels managment and the 
 
 ## About the logger implementation
 
-  * When a class mixins the `Logg::Machine` module, a `Logg::Dispatcher` instance
-is created and associated (if possible, see below) to the receiving class,
+  * When a class mixins the `Logg::Machine` module, a `Logg::Dispatcher` instance is created and associated (if possible, see below) to the receiving class,
 through method injection.
-  * The custom loggers blocks are runned in the context
-of a `Logg::Dispatcher::Render` class, so be aware you must inject in the
-closure any data you would require. This is by design so as to keep the
-logger's logic separated from the application burden, enforcing explicit
-control over the data payloads.
-  * If this is just too much a burden for you, you
-may avoid mixin `Logg::Machine` and just make use of the `Render` core
-implementation, by instantiating a new `Logg::Dispatcher` as illustrated in
-the Synopsis section above.
+* The custom loggers blocks are runned in the context of a `Logg::Dispatcher::Render` class, so be aware you must inject in the closure any data you would require. This is by design so as to keep the logger's logic separated from the application burden, enforcing explicit control over the data payloads.
+  * If this is just too much a burden for you, you may avoid mixin `Logg::Machine` and just make use of the `Render` core implementation, by instantiating a new `Logg::Dispatcher` as illustrated in the Synopsis section above.
+
+## Advice
+
+When using MRI 1.9.2 or equivalent implementations, you can now define closure with dynamic params:
+
+``` ruby
+log.as(:report) do |name = 'toto', *args|
+  puts a
+  puts args
+end
+log.report # => toto
+                []
+log.report('joe') # => joe
+                       []
+log.report('joe', {:foo => :bar}, 1) # => joe
+                                          [{:foo => :bar}, 1]
+```
+
+It also support blocks as closure parameters ([more details](http://www.igvita.com/2011/02/03/new-ruby-19-features-tips-tricks/)). All of this allows for building super-dynamic custom loggers.
