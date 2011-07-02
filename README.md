@@ -1,85 +1,80 @@
 # Logg
 
-A simple logger for your ruby applications.
+A simple message dispatcher (aka. logger) for your Ruby applications.
 
 ## Synopsis
 
-Logg is a library which you can use in any ruby program to gain logging features. At the core of Logg is a module, +Logg::Er+, which you may include (mixin) in a class, or extend within another module. This will inject the Logg helpers, so one can do:
+Logg is a library providing generic logging features. At the core of Logg is a module, +Logg::Machine+, which you may include (mixin) in a class, or extend within another module. This will inject the Logg helpers, so one can write something like this:
 
     class Foo
-      include Logg::Er
+      include Logg::Machine
     end
 
-    Foo.logger.debug "test!"      # => Fri Dec 31 16:00:09 +0100 2010 | test!
-    Foo.new.logger.debug "test…"  # => Fri Dec 31 16:00:09 +0100 2010 | test…
-    Foo.new.logger.error "failed" # => Fri Dec 31 16:00:09 +0100 2010 | [error] failed
+    Foo.log.debug "test!"      # => Fri Dec 31 16:00:09 +0100 2010 | [debug] test!
+    Foo.new.log.debug "test…"  # => Fri Dec 31 16:00:09 +0100 2010 | [debug] test…
+    Foo.new.log.error "failed" # => Fri Dec 31 16:00:09 +0100 2010 | [error] failed
 
-This illustrates the basic use case, with the default message template: time | [namespace] message.
+This illustrates the basic use case, with the default message format being: "time | [namespace] message" where namespace is the method called on the logger.
 
-Many other use cases are available under the `examples/` directory, based on the Cucumber features. Feel free to investigate.
+Many other use cases are available under the `examples/` directory, based on the Cucumber features. This README explains some of them.
 
 ## Custom loggers
 
-Usually, logging engine provide you with a bunch of "levels", such as FATAL, ERROR, WARNING, NOTICE. Logg does not enforce such a convention and rather let you define your own. One may create custom loggers using `Logg::Machine#as`:
+Usually, logging engines provide you with a bunch of "log levels", such as FATAL, ERROR, WARNING, NOTICE. Logg does not enforce such a convention and rather let you define your own, if required, but does not enforce you to do so. More generally, one may create custom loggers using `Logg::Core#as`:
 
     class Foo
-      include Logg::Er
+      include Logg::Machine
 
-      # define the custom logger
-      logger.as(:failure) do |data|
-        # play with data and render something, somewhere
+      # let's define a custom logger
+      log.as(:failure) do |data|
+        # play with data and render/do something, somewhere: output a String,
+        # send an email, anything you want.
       end
 
-      # then use it
-      logger.failure my_data
+      # then use it!
+      log.failure my_data
     end
 
-The block may take any number of arguments, of any kind. It should "render" a logging message, be it a simple string, or a template (see below). It should render the message to a valid IO endpoint, be it `$stdout`, `$stderr`, a `File`, an `IOString`… and may even render to several endpoints (again, see below).
+`as` expects a mandatory block, which may take any number of arguments, of any kind. Within the block, it is expected you will "log" somehow, but actually you are free to perform anything. You may output a simple string on $stdout, call an external API through HTTP, send an email, or even render a template (see below): that's just legacy ruby code in here! All in all, Logg is just a mega-method-definition-machine, aimed at logging—but feel free to use it the way you like (dispatching events, for instance).
 
-If you would like to define a custom logger `as`, this method is also available under `_as`.
+Soon to come: the possibility to change `log` for any other valid method name.
+
+Note: if you would like to define a custom logger under the name `as`, the helper method is also available under the `_as` alias.
 
 ## Message formatting, templates
 
-As logging is all about building meaningful messages, one should be provided with efficient tools to define how a message is rendered, once the data are available. Logg uses Tilt to help you define how a message looks like and what does it contain. Tilt is a wrapper around several template engines (you may know about ERB, haml, or the raw `String`, but there are many others). Just tell Logg which format you want to use and go ahead.
+Logging is all about building meaningful messages. You may also want to log to the tty, a file and send an email on top of that, and each one of those output channels would benefit from using a different data representation. One should thus be provided with efficient tools to define how a message is rendered in particular context. Logg makes use of Tilt to help you format your data. Tilt is a wrapper around several template engines (you may know about ERB or haml, but there are many others). Just tell Logg which format you want to use and go ahead! The dispatching logic is of your responsability.
 
-All supported template formats and rendering options are documented under `examples/` and by the Cucumber features.
+For more details, see `examples/` and read/run the Cucumber `features/` (with `cucumber features`).
 
     class Foo
-      include Logg::Er
+      include Logg::Machine
 
-      # let's use vanilla ruby code for the first example
-      logger.as(:foo) do
-        puts "…"
+      # let's use vanilla ruby code for the first example: output the
+      # message to $stdout using #puts
+      log.as(:foo) do
+        puts "something really important happened"
       end
 
-      # what about using inline ERB?
-      logger.as(:foo, :render => :erb) do
-        $stderr.puts "<%= … %>"
+      # you may also define a template within the block, render it and
+      # use the result.
+      # (Keep in mind that this kind of template with heavy code is considered bad practice ;))
+      log.as(:foo) do |data|
+        tpl = "Data: <%= self.map { |k,v| puts k.to_s + v.to_s } %>"
+        puts render_inline(tpl, :as => :erb, :data => data)
       end
+      log.foo({:foo => :bar}) # => "Data: foobar"
 
-      # now we want to render an external HAML template
-      # any data is passed to the template under the same name
-      logger.as(:foo, :render => :haml) do |data|
-        render('tpl/foo')
-      end
-
-      # or even simpler, with an explicit extension
-      logger.as(:foo) do |bar, baz|
-        render('tpl/foo.haml')
+      # now we want to render an external HAML template, providing its path with
+      # or withouth the .haml extension (if not provided, the :as option is mandatory)
+      log.as(:http_response) do |resp|
+        output = render('tpl/foo', :as => :haml, :data => resp)
+        # do something with output
       end
     end
 
-Note that the blocks are executed in the context of the logger, which means `render` is actually `Logg::Machine#render` and will not conflict with any other method. If you would like to define a `logger.render` custom logger, the `render` method is also available as `_render`.
-
-If you want to render to several endpoints, for instance both to `$stderr` and a file, just do it:
-
-    logger.as(:foo) do |data|
-      render('tpl/foo', :as => :haml, :to => :stderr)
-      render('tpl/foo', :as => :haml, :to => a_file)
-    end
-
-The template is memoized so rendering actually takes place only once.
+If you want to render to several logging endpoints, and send a mail on top of that, just do it within the block!
 
 ## About the logger backend
 
-When a class mixins the `Logg::Er` module, a `Logg::Machine` is created and associated (if possible, see below) to the base class, to its subclasses and to any instance of those classes. The machine is shared among those objects, which means custom loggers, formats… defined in any of them is available to all the others at runtime.
+When a class mixins the `Logg::Machine` module, a `Logg::Core` instance is created and associated (if possible, see below) to the base class, to its subclasses and to any instance of those classes. The machine is shared among those objects, which means custom loggers, formats… defined in any of them is available to all the others at runtime.
