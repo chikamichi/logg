@@ -44,7 +44,7 @@ module Logg
         if path.respond_to?(:path)
           path.path
         elsif path.respond_to?(:realpath)
-          path.realpath
+          path.to_s
         elsif path.is_a?(String)
           path
         else
