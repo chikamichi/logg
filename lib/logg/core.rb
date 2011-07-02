@@ -1,11 +1,17 @@
 module Logg
-  # Set to true to puts output using logger#debug default's method.
+  MAJOR = 0
+  MINOR = 1
+  PATCH = 0
+  VERSION = [MAJOR, MINOR, PATCH].join('.')
+
+  # Set to true to puts output when using logger#debug default's method.
   ALWAYS_PUTS = false
 
-  # A Machine is a logger core implementation, providing logger's definition
+  # A Dispatcher is a logger core implementation, providing logger's definition
   # and output methods. It's not intented to be used directly but through the
   # Er mixin, within a class.
-  class Machine
+  #
+  class Dispatcher
     class Render
       # Render a template. Just a mere proxy for Tilt::Template#render method,
       # the first argument being the filepath or file, and the latter,
@@ -78,8 +84,9 @@ module Logg
 
     attr_reader :message, :namespace
 
-    # The Machine is based on #method_missing. It auto-sets both the message
+    # The Dispatcher is based on #method_missing. It auto-sets both the message
     # and the namespace internally, then auto-sends the order +:output!+.
+    #
     def method_missing(meth, *args, &block)
       @namespace = meth.to_s
       @message   = (args.first.to_s == 'debug') ? nil : args.first.to_s
@@ -172,22 +179,25 @@ module Logg
     end
   end
 
-  # The Er module, when mixed-in a class, instantiates a Machine and performs some
+  # The Er module, when mixed-in a class, instantiates a Dispatcher and performs some
   # simple meta-programming on this receiver to add support for the logger. It thus
   # enable the receiver to use the logger's default implementation and/or define
   # custom loggers.
-  module Er
-    LOGGER = Logg::Machine.new
+  module Machine
+    LOGGER = Logg::Dispatcher.new
+    NAME = (defined?(::Logg::LOG_METHOD) && ::Logg::LOG_METHOD) || :log
 
     def self.included(base)
-      if !base.respond_to?(:logger)
+      if !base.respond_to?(NAME)
         base.instance_eval do
           # Memoized logger for the receiver's class.
           #
           # TODO: add support for defining the logger under a different name than #logger
           # this means either defining a constant before mixin, or delaying the metaprog.
-          def self.logger
-            @@_logg_er ||= LOGGER
+          class << self; self; end.instance_eval do
+            define_method(NAME) do
+              @@_logg_er ||= LOGGER
+            end
           end
         end
       else
@@ -201,10 +211,8 @@ module Logg
     module RedefInit
       def new *args, &block
         o = super
-        if !o.respond_to?(:logger)
-          class << o
-            self
-          end.send(:define_method, :logger) do
+        if !o.respond_to?(NAME)
+          class << o; self; end.send(:define_method, NAME) do
             @_logg_er ||= LOGGER
           end
         end
