@@ -105,8 +105,8 @@ class Foo
   # now we want to render an external HAML template, providing its path with
   # or withouth the .haml extension (if not provided, the :as option is mandatory)
   # note we expect two parameters for this logger
-  log.as(:http_response) do |response, context|
-    output = render('tpl/foo.haml', :data => response)
+  log.as(:http_response) do |response, params|
+    output = render('tpl/foo.haml', :data => response, :locals => { :params => params})
     # do something with output, for instance, send a mail notification when not a 200
   end
   log.http_response(resp, request.params) # performs the block, really
@@ -114,6 +114,16 @@ end
 ```
 
 If you want to render to several logging endpoints, and send a mail on top of that, just do it within the block!
+
+Both `#render_inline` and `#render` follow Tilt's implementation. The `:data`
+object is any Ruby object which be promoted as `self` when rendering the
+template. In the last example, if `foo.haml` where to contain calls to
+methods such as `status` or `body`, this would mean running `response.status`
+and `response.body` within the template. The `:locals` are additional
+variables one may need to interpolate the template. In the last example, we
+are passing the request parameters along the response object. You basically
+define your loggers the way you want (see `Advice` section below for some
+insight).
 
 ## Dispatching helpers
 
