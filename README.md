@@ -4,7 +4,7 @@ A simple message dispatcher (aka. logger) for your Ruby applications.
 
 ## Synopsis
 
-Logg is a library providing generic logging features. At the core of Logg is a module, +Logg::Machine+, which you may include (mixin) in a class, or extend within another module. This will inject the Logg helpers, so one can write something like this:
+Logg is a library providing generic logging features. At the core of Logg is a module, `Logg::Machine`, which you may include (mixin) in a class, or extend within another module. This will inject the Logg helpers, so one can write something like this:
 
     class Foo
       include Logg::Machine
