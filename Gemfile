@@ -4,6 +4,7 @@ gem 'tilt'
 gem 'better'
 
 group :development, :test do
+  gem 'yard'
   gem 'test-unit'
   gem 'rspec'
   gem 'cucumber'
