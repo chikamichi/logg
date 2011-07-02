@@ -79,7 +79,7 @@ class Foo
   # now we want to render an external HAML template, providing its path with
   # or withouth the .haml extension (if not provided, the :as option is mandatory)
   log.as(:http_response) do |resp|
-    output = render('tpl/foo', :as => :haml, :data => resp)
+    output = render('tpl/foo.haml', :data => resp)
     # do something with output
   end
 end
