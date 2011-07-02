@@ -167,7 +167,7 @@ module Logg
     #
     def output!
       output  = "#{Time.now} | "
-      output += "[#{@namespace}] " unless @namespace.nil?
+      output += "[#{@namespace.gsub('_', ' ')}] " unless @namespace.nil?
       output += @message
       puts output if defined?(Logg::ALWAYS_PUTS) && Logg::ALWAYS_PUTS
       return output

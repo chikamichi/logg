@@ -31,17 +31,14 @@ shared_examples_for "a Logg::Machine user" do
 
       context "message templating" do
         let(:response) do
-          response = OpenStruct.new
-          response.status = 200
-          response.body   = 'toto'
-          response
+          OpenStruct.new(:status => 200, :body => 'toto')
         end
         let(:expected) do
-          expected  = "<h2>Query log report</h2>\n"
-          expected += "<span class='status'>\n  Status:\n  #{response.status}\n</span>\n"
-          expected += "<span class='body'>\n  Response:\n  #{response.body}\n</span>\n"
-          expected += "<br />\n"
-          expected
+          %Q{<h2>Query log report</h2>
+<span class='status'>\n  Status:\n  #{response.status}\n</span>
+<span class='body'>\n  Response:\n  #{response.body}\n</span>
+<br />
+}
         end
         let(:expected2) do
           expected + "bar\n"

@@ -1,11 +1,12 @@
+# encoding: utf-8
 require 'logg'
 
-class Foo2
-  include Logg::MachineE
+class Foo
+  include Logg::Machine
 
   log.as(:warning) do
     puts "[Warning] something weird happened at #{Time.now}…"
   end
 end
 
-Foo2.log.warning
+Foo.log.warning
