@@ -160,3 +160,7 @@ log.report('joe', {:foo => :bar}, 1) # => joe
 ```
 
 It also support blocks as closure parameters ([more details](http://www.igvita.com/2011/02/03/new-ruby-19-features-tips-tricks/)). All of this allows for building super-dynamic custom loggers.
+
+## License
+
+[MIT License](http://en.wikipedia.org/wiki/MIT_License). See the LICENSE file.
