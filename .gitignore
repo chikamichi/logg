@@ -8,3 +8,4 @@ tmp*
 *.gem
 .gitignore
 TODO.md
+Gemfile.lock
