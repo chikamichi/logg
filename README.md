@@ -138,7 +138,7 @@ TODO: provide helpers for message dispatching/logging, levels managment and the 
 
   * When a class mixins the `Logg::Machine` module, a `Logg::Dispatcher` instance is created and associated (if possible, see below) to the receiving class,
 through method injection.
-  * The custom loggers blocks are runned in the context of a `Logg::Dispatcher::Render` class, so be aware you must inject in the closure any data you would require. This is by design so as to keep the logger's logic separated from the application burden, enforcing explicit control over the data payloads.
+  * The custom loggers blocks are ran    in the context of a `Logg::Dispatcher::Render` class, so be aware you must inject in the closure any data you would require. This is by design so as to keep the logger's logic separated from the application burden, enforcing explicit control over the data payloads.
   * If this is just too much a burden for you, you may avoid mixin `Logg::Machine` and just make use of the `Render` core implementation, by instantiating a new `Logg::Dispatcher` as illustrated in the Synopsis section above.
 
 ## Advice
