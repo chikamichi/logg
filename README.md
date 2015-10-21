@@ -1,3 +1,5 @@
+![unmaintained](http://img.shields.io/badge/status-unmaintained-red.png)
+
 # Logg
 
 A simple message dispatcher (aka. logger) for your Ruby applications.
